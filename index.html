@@ -1,0 +1,2225 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cybersecurity Quiz</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0a0e1a;
+        --surface: #111827;
+        --surface2: #1a2235;
+        --border: #1e3a5f;
+        --accent: #00d4ff;
+        --accent2: #7c3aed;
+        --accent3: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --text: #e2e8f0;
+        --muted: #64748b;
+        --correct: #10b981;
+        --wrong: #ef4444;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Syne", sans-serif;
+        min-height: 100vh;
+        background-image:
+          radial-gradient(
+            ellipse at 20% 20%,
+            rgba(0, 212, 255, 0.05) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            ellipse at 80% 80%,
+            rgba(124, 58, 237, 0.06) 0%,
+            transparent 50%
+          );
+      }
+      .mono {
+        font-family: "Space Mono", monospace;
+      }
+
+      /* HEADER */
+      .quiz-header {
+        background: linear-gradient(135deg, #0a0e1a 0%, #111827 100%);
+        border-bottom: 1px solid var(--border);
+        padding: 1rem 1.5rem;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(10px);
+      }
+      .header-inner {
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .quiz-title {
+        font-size: 1.1rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        color: var(--accent);
+        text-transform: uppercase;
+      }
+      .quiz-title span {
+        color: var(--text);
+      }
+
+      /* PROGRESS BAR */
+      .progress-wrap {
+        flex: 1;
+        min-width: 120px;
+      }
+      .progress-label {
+        font-size: 0.7rem;
+        color: var(--muted);
+        font-family: "Space Mono", monospace;
+        margin-bottom: 4px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .progress-bar-bg {
+        background: var(--surface2);
+        border-radius: 99px;
+        height: 6px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent), var(--accent2));
+        border-radius: 99px;
+        transition: width 0.4s ease;
+      }
+
+      /* SCORE BADGE */
+      .score-badge {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 4px 12px;
+        font-family: "Space Mono", monospace;
+        font-size: 0.75rem;
+        color: var(--accent3);
+        white-space: nowrap;
+      }
+
+      /* MAIN CONTAINER */
+      .quiz-main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+
+      /* SCREEN: START */
+      #startScreen {
+        text-align: center;
+        padding: 3rem 1rem;
+      }
+      .start-icon {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+      }
+      .start-title {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        font-weight: 800;
+        line-height: 1.1;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .start-subtitle {
+        color: var(--muted);
+        font-size: 1rem;
+        margin-bottom: 2.5rem;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .topics-list {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 2.5rem;
+      }
+      .topic-chip {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 99px;
+        padding: 6px 14px;
+        font-size: 0.8rem;
+        color: var(--accent);
+        font-family: "Space Mono", monospace;
+      }
+
+      /* BUTTONS */
+      .btn-primary-custom {
+        background: linear-gradient(135deg, var(--accent), var(--accent2));
+        border: none;
+        color: #fff;
+        font-family: "Syne", sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
+        padding: 0.85rem 2.5rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        letter-spacing: 0.5px;
+      }
+      .btn-primary-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0, 212, 255, 0.3);
+      }
+      .btn-secondary-custom {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-family: "Syne", sans-serif;
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 0.65rem 1.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-secondary-custom:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .btn-danger-custom {
+        background: transparent;
+        border: 1px solid var(--danger);
+        color: var(--danger);
+        font-family: "Syne", sans-serif;
+        font-weight: 600;
+        font-size: 0.85rem;
+        padding: 0.55rem 1.2rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-danger-custom:hover {
+        background: var(--danger);
+        color: #fff;
+      }
+
+      /* QUESTION CARD */
+      .question-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .question-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--accent), var(--accent2));
+      }
+      .question-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+      .question-number {
+        font-family: "Space Mono", monospace;
+        font-size: 0.75rem;
+        color: var(--muted);
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        padding: 3px 10px;
+        border-radius: 99px;
+      }
+      .question-category {
+        font-size: 0.7rem;
+        color: var(--accent2);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .question-text {
+        font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+        font-weight: 600;
+        line-height: 1.6;
+        color: var(--text);
+        margin-bottom: 0;
+      }
+
+      /* OPTIONS */
+      .options-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+      }
+      .option-btn {
+        background: var(--surface2);
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        padding: 1rem 1.25rem;
+        text-align: left;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.9rem;
+        color: var(--text);
+        font-family: "Syne", sans-serif;
+        font-size: 0.9rem;
+        line-height: 1.4;
+        width: 100%;
+      }
+      .option-btn:hover:not(:disabled) {
+        border-color: var(--accent);
+        background: rgba(0, 212, 255, 0.05);
+        transform: translateX(3px);
+      }
+      .option-btn:disabled {
+        cursor: not-allowed;
+      }
+      .option-btn.correct {
+        border-color: var(--correct);
+        background: rgba(16, 185, 129, 0.1);
+        color: #fff;
+      }
+      .option-btn.wrong {
+        border-color: var(--wrong);
+        background: rgba(239, 68, 68, 0.1);
+      }
+      .option-btn.selected-wrong {
+        border-color: var(--wrong);
+        background: rgba(239, 68, 68, 0.15);
+      }
+      .option-letter {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        font-family: "Space Mono", monospace;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--muted);
+        flex-shrink: 0;
+        margin-top: 1px;
+        transition: all 0.2s;
+      }
+      .option-btn.correct .option-letter {
+        background: var(--correct);
+        border-color: var(--correct);
+        color: #fff;
+      }
+      .option-btn.wrong .option-letter,
+      .option-btn.selected-wrong .option-letter {
+        background: var(--wrong);
+        border-color: var(--wrong);
+        color: #fff;
+      }
+      .option-btn:hover:not(:disabled) .option-letter {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+
+      /* FEEDBACK */
+      .feedback-box {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.88rem;
+        line-height: 1.5;
+        display: none;
+      }
+      .feedback-box.show {
+        display: block;
+      }
+      .feedback-box.correct-fb {
+        border-color: var(--correct);
+      }
+      .feedback-box.wrong-fb {
+        border-color: var(--wrong);
+      }
+      .feedback-label {
+        font-weight: 700;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 4px;
+      }
+      .feedback-label.correct-fb {
+        color: var(--correct);
+      }
+      .feedback-label.wrong-fb {
+        color: var(--wrong);
+      }
+
+      /* NAV BUTTONS */
+      .nav-buttons {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .nav-buttons .spacer {
+        flex: 1;
+      }
+
+      /* RESULTS SCREEN */
+      #resultsScreen {
+        display: none;
+      }
+      .result-hero {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 2.5rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .result-hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          var(--accent),
+          var(--accent2),
+          var(--accent3)
+        );
+      }
+      .result-emoji {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+      }
+      .result-score {
+        font-size: clamp(3rem, 8vw, 5rem);
+        font-weight: 800;
+        font-family: "Space Mono", monospace;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+      }
+      .result-score .slash {
+        color: var(--muted);
+        font-size: 0.5em;
+      }
+      .result-grade {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      .result-message {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      .stats-row {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 1.5rem;
+      }
+      .stat-chip {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 0.75rem 1.25rem;
+        text-align: center;
+        min-width: 90px;
+      }
+      .stat-chip .val {
+        font-family: "Space Mono", monospace;
+        font-size: 1.4rem;
+        font-weight: 700;
+        display: block;
+      }
+      .stat-chip .lbl {
+        font-size: 0.7rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .stat-chip.correct-stat .val {
+        color: var(--correct);
+      }
+      .stat-chip.wrong-stat .val {
+        color: var(--wrong);
+      }
+      .stat-chip.pct-stat .val {
+        color: var(--accent);
+      }
+
+      /* REVIEW */
+      .review-header {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .filter-btns {
+        display: flex;
+        gap: 0.5rem;
+      }
+      .filter-btn {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 4px 12px;
+        font-size: 0.75rem;
+        font-family: "Space Mono", monospace;
+        cursor: pointer;
+        color: var(--muted);
+        transition: all 0.15s;
+      }
+      .filter-btn.active {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: rgba(0, 212, 255, 0.08);
+      }
+      .review-item {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin-bottom: 0.75rem;
+        transition: all 0.2s;
+      }
+      .review-item.correct-item {
+        border-left: 3px solid var(--correct);
+      }
+      .review-item.wrong-item {
+        border-left: 3px solid var(--wrong);
+      }
+      .review-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.6rem;
+        gap: 0.5rem;
+      }
+      .review-qnum {
+        font-family: "Space Mono", monospace;
+        font-size: 0.7rem;
+        color: var(--muted);
+      }
+      .review-status {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 2px 8px;
+        border-radius: 99px;
+        flex-shrink: 0;
+      }
+      .review-status.correct {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--correct);
+      }
+      .review-status.wrong {
+        background: rgba(239, 68, 68, 0.15);
+        color: var(--wrong);
+      }
+      .review-question {
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 0.6rem;
+        line-height: 1.4;
+      }
+      .review-answers {
+        font-size: 0.82rem;
+      }
+      .review-answers .label {
+        color: var(--muted);
+        font-weight: 600;
+      }
+      .review-answers .correct-ans {
+        color: var(--correct);
+      }
+      .review-answers .wrong-ans {
+        color: var(--wrong);
+      }
+
+      /* Skipped */
+      .skipped-badge {
+        background: rgba(100, 116, 139, 0.2);
+        border: 1px solid var(--muted);
+        color: var(--muted);
+        font-size: 0.75rem;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: "Space Mono", monospace;
+      }
+
+      /* Bottom result actions */
+      .result-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 2rem;
+      }
+
+      /* Scroll to top */
+      @media (max-width: 576px) {
+        .question-card {
+          padding: 1.25rem;
+        }
+        .result-hero {
+          padding: 1.5rem;
+        }
+        .quiz-main {
+          padding: 1rem 0.75rem;
+        }
+      }
+
+      /* Animations */
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-in {
+        animation: slideIn 0.3s ease forwards;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="quiz-header">
+      <div class="header-inner">
+        <div class="quiz-title">🔐 <span>Cyber</span>Sec Quiz</div>
+        <div class="progress-wrap" id="headerProgress" style="display: none">
+          <div class="progress-label">
+            <span id="progressText">Question 1 of 100</span>
+            <span id="progressPct">0%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div
+              class="progress-bar-fill"
+              id="progressFill"
+              style="width: 0%"
+            ></div>
+          </div>
+        </div>
+        <div class="score-badge" id="scoreBadge" style="display: none">
+          Score: <span id="liveScore">0</span> /
+          <span id="liveAnswered">0</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="quiz-main">
+      <!-- START SCREEN -->
+      <div id="startScreen">
+        <div class="start-icon">🛡️</div>
+        <h1 class="start-title">Cybersecurity<br />Mastery Quiz</h1>
+        <p class="start-subtitle">
+          100 randomized questions covering IDS/IPS, Security Threats, and Risk
+          Analysis. Test your knowledge!
+        </p>
+        <div class="topics-list">
+          <span class="topic-chip">IDS / IPS</span>
+          <span class="topic-chip">Threat Actors</span>
+          <span class="topic-chip">Malware Types</span>
+          <span class="topic-chip">Network Attacks</span>
+          <span class="topic-chip">Wireless Threats</span>
+          <span class="topic-chip">Risk Management</span>
+          <span class="topic-chip">Cryptographic Attacks</span>
+          <span class="topic-chip">BIA & Recovery</span>
+        </div>
+        <button class="btn-primary-custom" onclick="startQuiz()">
+          Start Quiz →
+        </button>
+      </div>
+
+      <!-- QUIZ SCREEN -->
+      <div id="quizScreen" style="display: none">
+        <div class="question-card animate-in" id="questionCard">
+          <div class="question-meta">
+            <span class="question-number mono" id="qNumber">Q1 / 100</span>
+            <span class="question-category" id="qCategory">Category</span>
+          </div>
+          <p class="question-text" id="questionText">Question here</p>
+        </div>
+
+        <div class="options-grid" id="optionsGrid"></div>
+
+        <div class="feedback-box" id="feedbackBox">
+          <div class="feedback-label" id="feedbackLabel"></div>
+          <div id="feedbackText"></div>
+        </div>
+
+        <div class="nav-buttons">
+          <button
+            class="btn-secondary-custom"
+            id="backBtn"
+            onclick="goBack()"
+            disabled
+          >
+            ← Back
+          </button>
+          <div class="spacer"></div>
+          <button class="btn-danger-custom" onclick="confirmRestart()">
+            ↺ Restart
+          </button>
+          <button
+            class="btn-primary-custom"
+            id="nextBtn"
+            onclick="goNext()"
+            style="display: none"
+          >
+            Next →
+          </button>
+          <button
+            class="btn-primary-custom"
+            id="finishBtn"
+            onclick="finishQuiz()"
+            style="display: none"
+          >
+            Finish Quiz ✓
+          </button>
+        </div>
+      </div>
+
+      <!-- RESULTS SCREEN -->
+      <div id="resultsScreen">
+        <div class="result-hero animate-in">
+          <div class="result-emoji" id="resultEmoji">🎯</div>
+          <div class="result-score">
+            <span id="finalScore">0</span><span class="slash">/100</span>
+          </div>
+          <div class="result-grade" id="resultGrade">Loading...</div>
+          <div class="result-message" id="resultMessage">...</div>
+          <div class="stats-row">
+            <div class="stat-chip correct-stat">
+              <span class="val" id="correctCount">0</span>
+              <span class="lbl">Correct</span>
+            </div>
+            <div class="stat-chip wrong-stat">
+              <span class="val" id="wrongCount">0</span>
+              <span class="lbl">Wrong</span>
+            </div>
+            <div class="stat-chip">
+              <span class="val" id="skippedCount">0</span>
+              <span class="lbl">Skipped</span>
+            </div>
+            <div class="stat-chip pct-stat">
+              <span class="val" id="pctScore">0%</span>
+              <span class="lbl">Score</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="review-header">
+          <span>Review Answers</span>
+          <div class="filter-btns">
+            <button
+              class="filter-btn active"
+              onclick="filterReview('all', this)"
+            >
+              All
+            </button>
+            <button class="filter-btn" onclick="filterReview('correct', this)">
+              ✓ Correct
+            </button>
+            <button class="filter-btn" onclick="filterReview('wrong', this)">
+              ✗ Wrong
+            </button>
+          </div>
+        </div>
+
+        <div id="reviewList"></div>
+
+        <div class="result-actions">
+          <button class="btn-primary-custom" onclick="restartQuiz()">
+            ↺ Try Again
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // ===================== QUESTION BANK (100 questions) =====================
+      const ALL_QUESTIONS = [
+        // ─────────── IDS / IPS (35 questions) ───────────
+        {
+          cat: "IDS/IPS",
+          q: "What does IDS stand for in cybersecurity?",
+          opts: [
+            "Intrusion Detection System",
+            "Internet Defense Software",
+            "Integrated Data Security",
+            "Infrastructure Detection Suite",
+          ],
+          ans: 0,
+          exp: "IDS stands for Intrusion Detection System — a system that detects attacks as soon as possible and takes appropriate action.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "An IDS is described as a reactive agent rather than a pro-active one. Which analogy best captures its role?",
+          opts: ["Police officer", "Informant", "Firewall", "Guard dog"],
+          ans: 1,
+          exp: "An IDS plays the role of an informant rather than a police officer — it detects and reports but does not usually take preventive action.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "What is an audit trail in the context of intrusion detection?",
+          opts: [
+            "A firewall log",
+            "A record of system activities logged in chronological order",
+            "A network topology diagram",
+            "An encryption key log",
+          ],
+          ans: 1,
+          exp: "An audit trail is a record of activities on a system that are logged to a file in chronologically sorted order.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "Which IDS detection approach uses pre-defined patterns to identify known attacks?",
+          opts: [
+            "Anomaly detection",
+            "Misuse (signature-based) detection",
+            "Hybrid detection",
+            "Behavioral detection",
+          ],
+          ans: 1,
+          exp: "Misuse detection (signature-based) uses intrusion patterns such as sequences of system calls or network traffic patterns to identify known attacks.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "Which IDS approach defines a profile of 'normal' behavior and detects deviations from it?",
+          opts: [
+            "Signature-based detection",
+            "Misuse detection",
+            "Anomaly detection",
+            "Rule-based detection",
+          ],
+          ans: 2,
+          exp: "Anomaly detection defines a profile describing normal behavior, then detects deviations. It can detect potential new attacks but has higher false positive rates.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "A major disadvantage of misuse-based IDS is that it:",
+          opts: [
+            "Has very high false positive rates",
+            "Cannot detect new unknown attacks",
+            "Cannot analyze network traffic",
+            "Requires cloud connectivity",
+          ],
+          ans: 1,
+          exp: "Misuse detection cannot detect new (previously unseen) attacks because it relies on known patterns.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "Host-based IDS monitors which of the following?",
+          opts: [
+            "Only network traffic at gateways",
+            "Shell commands and system calls on individual hosts",
+            "Only wireless traffic",
+            "Only DNS queries",
+          ],
+          ans: 1,
+          exp: "Host-based IDS monitors shell commands and system calls executed by user applications and system programs on individual machines.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "Which of the following is a limitation of host-based IDS?",
+          opts: [
+            "Cannot monitor encrypted traffic",
+            "If an attacker takes over the machine, IDS binaries can be tampered with",
+            "Cannot detect malware",
+            "Cannot scan ports",
+          ],
+          ans: 1,
+          exp: "If an attacker takes over the machine, they can tamper with IDS binaries and modify audit logs, undermining the host-based IDS.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "Network-based IDS sensors are typically deployed at:",
+          opts: [
+            "Individual endpoints only",
+            "Strategic locations such as gateway routers",
+            "Only wireless access points",
+            "Database servers",
+          ],
+          ans: 1,
+          exp: "Network IDS deploys sensors at strategic locations, for example via packet sniffing at routers, to inspect network traffic.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "A key limitation of network-based IDS is that it:",
+          opts: [
+            "Cannot inspect packet payloads",
+            "Cannot execute the payload or perform code analysis",
+            "Cannot monitor TCP connections",
+            "Cannot generate alarms",
+          ],
+          ans: 1,
+          exp: "Network-based IDS cannot execute the payload or do any code analysis and may be defeated by encryption.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "What is a 'vulnerability signature' used for in IDS?",
+          opts: [
+            "Detecting only known worms",
+            "Working for polymorphic worms targeting the same vulnerability",
+            "Encrypting network traffic",
+            "Scanning for open ports",
+          ],
+          ans: 1,
+          exp: "Vulnerability signatures work for polymorphic worms and all worms targeting the same vulnerability, unlike exploit-based signatures.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "What percentage of vulnerabilities are attributed to buffer overflow according to the course content?",
+          opts: ["25%", "50%", "75%", "90%"],
+          ans: 2,
+          exp: "At least 75% of vulnerabilities are due to buffer overflow.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "In the context of IDS, what is 'polymorphism' a threat to?",
+          opts: [
+            "Anomaly-based detection",
+            "Exploit-based signatures",
+            "Audit trails",
+            "Hybrid detection",
+          ],
+          ans: 1,
+          exp: "Polymorphic worms may not have an exact exploit-based signature, making signature-based detection unreliable against them.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "An active IDS can use TCP reset packets to perform:",
+          opts: [
+            "Rule modification",
+            "Session disruption",
+            "Packet encryption",
+            "Log deletion",
+          ],
+          ans: 1,
+          exp: "Session disruption allows an active IDS to send a TCP reset packet to disconnect an attacker's TCP connection to the victim.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "When an IDS is linked to a firewall and tells it to drop packets from an attacker's IP address, this is called:",
+          opts: [
+            "Session disruption",
+            "Rule modification",
+            "Packet sniffing",
+            "Honeypotting",
+          ],
+          ans: 1,
+          exp: "Rule modification is when the IDS communicates with the firewall to drop all packets from the attacker's IP address.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "Anomaly-based detection can have a high false positive rate because:",
+          opts: [
+            "It is too slow to analyze traffic",
+            "Anomalies can simply be new normal activities",
+            "It cannot read encrypted traffic",
+            "It only analyzes host-level logs",
+          ],
+          ans: 1,
+          exp: "Anomalies can just be new normal activities or be caused by other element faults such as router failure or misconfiguration.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "The Hybrid IDS (HID) algorithm combines which two detection approaches?",
+          opts: [
+            "Host-based and network-based",
+            "Anomaly detection and misuse-based detection",
+            "Signature and traffic analysis",
+            "Firewall rules and IPS",
+          ],
+          ans: 1,
+          exp: "The hybrid IDS combines anomaly detection using seeded k-means and misuse-based detection using tuned Snort rules.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "Which open-source tool is used in HID for capturing network packets?",
+          opts: ["Wireshark", "Snort", "libpcap", "tcpdump"],
+          ans: 2,
+          exp: "Network traffic is analyzed by capturing packets using the libpcap tool of the operating system.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "Wireshark (formerly Ethereal) is best described as:",
+          opts: [
+            "A packet injection tool",
+            "A GUI-based open-source packet viewer",
+            "A firewall management tool",
+            "An IPS engine",
+          ],
+          ans: 1,
+          exp: "Wireshark is the best open-source GUI-based packet viewer, and it is not an element of Snort itself.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "Which of the following is a primary assumption for intrusion detection to work?",
+          opts: [
+            "All traffic is encrypted",
+            "System activities are observable and normal/intrusive activities have distinct evidence",
+            "All attacks are known in advance",
+            "Network is always available",
+          ],
+          ans: 1,
+          exp: "Primary assumptions: system activities are observable, and normal and intrusive activities have distinct evidence.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "What does IPS stand for and how does it extend IDS?",
+          opts: [
+            "Internet Protection System; adds encryption",
+            "Intrusion Prevention System; adds access control to protect against exploitation",
+            "Information Protection Suite; adds logging",
+            "Integrated Packet Scanner; adds port scanning",
+          ],
+          ans: 1,
+          exp: "IPS stands for Intrusion Prevention System — it extends intrusion detection with the exercise of access control to protect computers from exploitation.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "In IDS terminology, what is a 'penetration'?",
+          opts: [
+            "An attempted attack",
+            "A successful attack",
+            "A network scan",
+            "A vulnerability",
+          ],
+          ans: 1,
+          exp: "Penetration is defined as a successful attack.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "In IDS terminology, what is a 'vulnerability'?",
+          opts: [
+            "A successful attack",
+            "A known or suspected flaw that exposes a system to penetration or information disclosure",
+            "A security policy",
+            "An audit log entry",
+          ],
+          ans: 1,
+          exp: "A vulnerability is a known or suspected flaw in hardware, software, or operations that exposes the system to penetration or accidental disclosure.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "The process of identifying and responding to intrusion activities is known as:",
+          opts: [
+            "Vulnerability management",
+            "Intrusion detection",
+            "Risk assessment",
+            "Packet filtering",
+          ],
+          ans: 1,
+          exp: "Intrusion detection is defined as the process of identifying and responding to intrusion activities.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "Which component of an IDS generates alarms based on detection model output?",
+          opts: [
+            "Audit data preprocessor",
+            "Knowledge base",
+            "Decision engine",
+            "Detection engine",
+          ],
+          ans: 3,
+          exp: "The detection engine processes detection models and outputs alarms, which are then handled by the decision engine.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "Host-based IDS has the most comprehensive program information for detection. What risk does this create?",
+          opts: [
+            "Slower detection speeds",
+            "Attacker can tamper with IDS binaries if machine is compromised",
+            "Higher network bandwidth usage",
+            "Unable to detect insider threats",
+          ],
+          ans: 1,
+          exp: "If an attacker takes over the machine, they can tamper with IDS binaries and modify audit logs.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "What is the main scalability issue with host-based intrusion detection during a worm outbreak?",
+          opts: [
+            "High cost of licenses",
+            "Host-based sensors can only cover limited IP space",
+            "Too many audit logs",
+            "Incompatibility with firewalls",
+          ],
+          ans: 1,
+          exp: "Host-based sensors can only cover limited IP space, which creates scalability issues, especially in the early stage of a worm outbreak.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "Network-based IDS may be defeated by encryption. How can this be mitigated?",
+          opts: [
+            "Disable encryption entirely",
+            "Use encryption only at the gateway or proxy",
+            "Deploy more sensors",
+            "Use host-based IDS only",
+          ],
+          ans: 1,
+          exp: "Encryption defeat can be mitigated with encryption only at the gateway/proxy, allowing the IDS to inspect traffic before encryption.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "Passive IDS systems, when detecting an attack, primarily:",
+          opts: [
+            "Block the attacker automatically",
+            "Send an alarm to an administrator",
+            "Reset the TCP connection",
+            "Modify firewall rules immediately",
+          ],
+          ans: 1,
+          exp: "Passive systems can only send an alarm to an administrator when there is an attempt in progress.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "Which detection method would BEST detect a DDoS SYN flooding attack?",
+          opts: [
+            "Signature-based (misuse) detection",
+            "Anomaly detection",
+            "Only host-based IDS",
+            "Manual log analysis",
+          ],
+          ans: 1,
+          exp: "Anomaly detection, which identifies deviations from normal behavior, is best positioned to detect DDoS SYN flooding.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "In the hybrid IDS model, what technique is used for anomaly detection?",
+          opts: [
+            "Deep packet inspection",
+            "Seeded k-means clustering",
+            "Random forest algorithm",
+            "Bayesian filtering",
+          ],
+          ans: 1,
+          exp: "The hybrid IDS uses seeded k-means clustering for anomaly-based detection.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "An intrusion is defined as actions aimed to compromise which security goals?",
+          opts: [
+            "Authentication, authorization, and accounting",
+            "Integrity, confidentiality, or availability",
+            "Firewalling, patching, and logging",
+            "Speed, reliability, and uptime",
+          ],
+          ans: 1,
+          exp: "An intrusion is a set of actions aimed to compromise the security goals of integrity, confidentiality, or availability.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "Audit trails are particularly useful for:",
+          opts: [
+            "Preventing attacks proactively",
+            "Establishing the guilt of attackers and detecting unauthorized activity",
+            "Encrypting sensitive data",
+            "Managing firewall rules",
+          ],
+          ans: 1,
+          exp: "Audit trails are particularly useful in establishing the guilt of attackers and are often the only way to detect unauthorized but subversive user activity.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "In IDS architecture, which component processes raw audit data first?",
+          opts: [
+            "Decision engine",
+            "Alarm generator",
+            "Audit data preprocessor",
+            "Detection engine",
+          ],
+          ans: 2,
+          exp: "The audit data preprocessor takes audit records and activity data as input, which then flows into the detection engine.",
+        },
+        {
+          cat: "IDS/IPS",
+          q: "What is the main advantage of anomaly-based detection over signature-based detection?",
+          opts: [
+            "Lower false positive rate",
+            "Can detect potential new and unknown attacks",
+            "Faster detection speed",
+            "Requires less computational power",
+          ],
+          ans: 1,
+          exp: "Anomaly-based detection can detect potential new and unknown attacks by identifying deviations from normal behavior.",
+        },
+
+        // ─────────── Security Threats (45 questions) ───────────
+        {
+          cat: "Security Threats",
+          q: "A 'white hat' hacker is best described as:",
+          opts: [
+            "A hacker who breaks into systems for financial gain",
+            "A hacker who discovers and exposes security flaws with an organization's consent",
+            "A hacker who exposes flaws without consent for malicious purposes",
+            "An inexperienced hacker relying on automated tools",
+          ],
+          ans: 1,
+          exp: "A white hat hacker discovers and exposes security flaws with an organization's consent so flaws can be fixed before they become widespread problems.",
+        },
+        {
+          cat: "Security Threats",
+          q: "Which threat actor type is primarily motivated by causing social or political change?",
+          opts: [
+            "Script kiddie",
+            "Organized crime",
+            "Hacktivist",
+            "Nation state",
+          ],
+          ans: 2,
+          exp: "A hacktivist gains unauthorized access and causes disruption to achieve political or social change.",
+        },
+        {
+          cat: "Security Threats",
+          q: "Social engineering is best defined as:",
+          opts: [
+            "A hardware-based intrusion technique",
+            "Using deception and trickery to convince users to provide sensitive data or violate security guidelines",
+            "A type of SQL injection attack",
+            "A cryptographic attack on encryption keys",
+          ],
+          ans: 1,
+          exp: "Social engineering uses deception and trickery to convince unsuspecting users to provide sensitive data or violate security guidelines.",
+        },
+        {
+          cat: "Security Threats",
+          q: "Which social engineering principle involves taking advantage of the human tendency to be part of a group?",
+          opts: ["Authority", "Scarcity", "Consensus", "Urgency"],
+          ans: 2,
+          exp: "Consensus takes advantage of the human tendency to want to be part of a group.",
+        },
+        {
+          cat: "Security Threats",
+          q: "Phishing is primarily a type of:",
+          opts: [
+            "Network port scan",
+            "Email-based social engineering attack",
+            "Wireless jamming attack",
+            "Buffer overflow exploit",
+          ],
+          ans: 1,
+          exp: "Phishing is a type of email-based social engineering where an attacker sends email from a supposedly reputable source to elicit private information.",
+        },
+        {
+          cat: "Security Threats",
+          q: "Spear phishing differs from regular phishing in that it:",
+          opts: [
+            "Uses phone calls instead of email",
+            "Targets a specific individual or organization",
+            "Only targets financial institutions",
+            "Uses SMS messages",
+          ],
+          ans: 1,
+          exp: "Spear phishing is a variant where attackers target a specific individual or organization, unlike regular phishing which casts a wide net.",
+        },
+        {
+          cat: "Security Threats",
+          q: "A form of spear phishing that targets extremely wealthy individuals or organizations is called:",
+          opts: ["Smishing", "Vishing", "Whaling", "Pharming"],
+          ans: 2,
+          exp: "Whaling is a form of spear phishing that targets individuals or organizations known to be extremely wealthy.",
+        },
+        {
+          cat: "Security Threats",
+          q: "Pharming attacks redirect users to:",
+          opts: [
+            "A blacklisted IP address",
+            "A fake website that resembles the original site",
+            "A malware download site",
+            "A network honeypot",
+          ],
+          ans: 1,
+          exp: "Pharming redirects a request for a website to a fake site that resembles the original site.",
+        },
+        {
+          cat: "Security Threats",
+          q: "What is 'smishing'?",
+          opts: [
+            "An attack using VoIP to extract information",
+            "A human-based attack using SMS text messages to extract information",
+            "An email spoofing technique",
+            "A Bluetooth-based attack",
+          ],
+          ans: 1,
+          exp: "Smishing is a human-based attack where the attacker extracts information by using SMS text messages.",
+        },
+        {
+          cat: "Security Threats",
+          q: "Tailgating aims to:",
+          opts: [
+            "Steal passwords by observing keystrokes",
+            "Gain entry to a secure area by following an employee without their knowledge",
+            "Access a computer over a network",
+            "Intercept wireless signals",
+          ],
+          ans: 1,
+          exp: "Tailgating's goal is to gain entry to a secure area by following an employee through an entrance without their knowledge.",
+        },
+        {
+          cat: "Security Threats",
+          q: "What is the difference between tailgating and piggy backing?",
+          opts: [
+            "Tailgating is digital; piggy backing is physical",
+            "Tailgating is without the employee's knowledge; piggy backing is with their knowledge",
+            "Tailgating uses tools; piggy backing uses deception",
+            "There is no difference",
+          ],
+          ans: 1,
+          exp: "Tailgating occurs without the employee's knowledge, while piggy backing is following an employee through an entrance with their knowledge.",
+        },
+        {
+          cat: "Security Threats",
+          q: "A watering hole attack works by:",
+          opts: [
+            "Flooding a network with traffic",
+            "Infecting websites that a target group frequently visits",
+            "Intercepting emails between employees",
+            "Cracking password hashes",
+          ],
+          ans: 1,
+          exp: "In a watering hole attack, an attacker identifies websites used by a target group, infects those websites, and then compromises users who visit them.",
+        },
+        {
+          cat: "Security Threats",
+          q: "Malware that spreads from computer to computer WITHOUT attaching itself to files is called a:",
+          opts: ["Virus", "Trojan horse", "Worm", "Rootkit"],
+          ans: 2,
+          exp: "A worm spreads from computer to computer without attaching itself to different files, unlike a virus which attaches itself.",
+        },
+        {
+          cat: "Security Threats",
+          q: "A virus requires what to spread?",
+          opts: [
+            "Network connectivity",
+            "Human action to trigger self-replication",
+            "An open port",
+            "An administrator account",
+          ],
+          ans: 1,
+          exp: "A virus requires human action to trigger self-replication — it is a piece of code that spreads by attaching to other files.",
+        },
+        {
+          cat: "Security Threats",
+          q: "Software that takes full or partial control of a system at the lowest levels is called a:",
+          opts: ["Keylogger", "Adware", "Rootkit", "Spyware"],
+          ans: 2,
+          exp: "A rootkit is software intended to take full or partial control of a system at the lowest levels.",
+        },
+        {
+          cat: "Security Threats",
+          q: "Which type of malware hides itself on an infected system within a seemingly benign package?",
+          opts: ["Worm", "Logic bomb", "Trojan horse", "Adware"],
+          ans: 2,
+          exp: "A Trojan horse hides malicious content in a benign package; it is not self-replicating and not attached to other files.",
+        },
+        {
+          cat: "Security Threats",
+          q: "A logic bomb is malware that:",
+          opts: [
+            "Continuously replicates across networks",
+            "Sits dormant until triggered by specific conditions such as a date and time",
+            "Steals passwords in real-time",
+            "Encrypts files immediately upon installation",
+          ],
+          ans: 1,
+          exp: "A logic bomb sits dormant on a target computer until triggered by specific conditions, such as a specific date and time, then detonates.",
+        },
+        {
+          cat: "Security Threats",
+          q: "Ransomware that uses encryption to make the victim's data inaccessible is specifically called:",
+          opts: ["Spyware", "Adware", "Crypto-malware", "Keylogger"],
+          ans: 2,
+          exp: "Crypto-malware is a form of ransomware that uses encryption to render the victim's data inaccessible.",
+        },
+        {
+          cat: "Security Threats",
+          q: "A botnet consists of computers infected by a control program called a:",
+          opts: ["Rootkit", "Bot", "Trojan", "Keylogger"],
+          ans: 1,
+          exp: "A botnet is a set of computers infected by a control program called a bot that enables attackers to collectively exploit those computers.",
+        },
+        {
+          cat: "Security Threats",
+          q: "An Advanced Persistent Threat (APT) is characterized by:",
+          opts: [
+            "Single, fast attacks",
+            "Multiple attack vectors, unauthorized access over a long period of time, covering its tracks",
+            "Only targeting personal computers",
+            "Relying solely on phishing emails",
+          ],
+          ans: 1,
+          exp: "An APT uses multiple attack vectors to gain unauthorized access to sensitive resources and maintains that access for a long period of time, covering its tracks.",
+        },
+        {
+          cat: "Security Threats",
+          q: "In a rainbow table attack, the attacker:",
+          opts: [
+            "Tries every possible alphanumeric combination",
+            "Uses pre-generated hashes of plaintext passwords to crack hashed passwords",
+            "Exploits a zero-day vulnerability",
+            "Intercepts login packets on the network",
+          ],
+          ans: 1,
+          exp: "Rainbow table attacks use pre-generated plaintext passwords and their hashes to crack passwords, trading time saved for disk space.",
+        },
+        {
+          cat: "Security Threats",
+          q: "A brute force password attack:",
+          opts: [
+            "Compares passwords against a dictionary list",
+            "Tries every possible alphanumeric combination using password-cracking software",
+            "Steals hashes from network traffic",
+            "Uses social engineering to guess passwords",
+          ],
+          ans: 1,
+          exp: "A brute force attack uses password-cracking software to try every possible alphanumeric combination.",
+        },
+        {
+          cat: "Security Threats",
+          q: "In a cross-site scripting (XSS) attack, the attacker:",
+          opts: [
+            "Sends oversized data to crash a buffer",
+            "Injects malicious scripts into trusted websites that run when a user visits the site",
+            "Redirects DNS requests to fake servers",
+            "Intercepts TCP session tokens",
+          ],
+          ans: 1,
+          exp: "XSS injects malicious scripts into trusted websites; these scripts run when an unsuspecting user visits the site.",
+        },
+        {
+          cat: "Security Threats",
+          q: "A buffer overflow attack exploits:",
+          opts: [
+            "Weak passwords",
+            "Fixed data buffer sizes by sending data that is too large, causing the application to crash",
+            "Unpatched DNS servers",
+            "Bluetooth connections",
+          ],
+          ans: 1,
+          exp: "Buffer overflow exploits fixed data buffer sizes in software by sending data that is too large for the buffer, causing the application to crash.",
+        },
+        {
+          cat: "Security Threats",
+          q: "Privilege escalation where a user accesses data intended for a different user at the SAME privilege level is called:",
+          opts: [
+            "Vertical escalation",
+            "Horizontal escalation",
+            "Lateral movement",
+            "Privilege abuse",
+          ],
+          ans: 1,
+          exp: "Horizontal escalation is where a user accesses functionality or data intended for another user at the same privilege level.",
+        },
+        {
+          cat: "Security Threats",
+          q: "In IP address spoofing, the attacker:",
+          opts: [
+            "Clones the target's MAC address",
+            "Sends IP packets from a false source address to communicate with targets",
+            "Intercepts DNS queries",
+            "Captures session cookies",
+          ],
+          ans: 1,
+          exp: "IP address spoofing is a spoofing attack where the attacker sends IP packets from a false source address.",
+        },
+        {
+          cat: "Security Threats",
+          q: "ARP poisoning redirects:",
+          opts: [
+            "DNS queries to malicious servers",
+            "An IP address to the MAC address of a computer that is not the intended recipient",
+            "TCP sessions to an attacker's machine",
+            "HTTPS traffic to HTTP",
+          ],
+          ans: 1,
+          exp: "ARP poisoning redirects an IP address to the MAC address of a computer that is not the intended recipient, enabling traffic interception.",
+        },
+        {
+          cat: "Security Threats",
+          q: "A man-in-the-middle (MitM) attack involves:",
+          opts: [
+            "Flooding the target with traffic",
+            "An attacker making an independent connection between two victims and stealing information",
+            "Sending malicious email attachments",
+            "Injecting malware into firmware",
+          ],
+          ans: 1,
+          exp: "In a MitM attack, the attacker makes an independent connection between two victims and steals information to use fraudulently.",
+        },
+        {
+          cat: "Security Threats",
+          q: "A replay attack involves:",
+          opts: [
+            "Sending repeated login attempts",
+            "Capturing network traffic and retransmitting it later to gain unauthorized access",
+            "Sending SYN packets to all ports",
+            "Impersonating a user in real time",
+          ],
+          ans: 1,
+          exp: "A replay attack captures network traffic and stores it for retransmission at a later time to gain unauthorized access.",
+        },
+        {
+          cat: "Security Threats",
+          q: "A DDoS attack uses:",
+          opts: [
+            "A single computer to attack one target",
+            "Multiple computers on disparate networks to launch a DoS attack from many simultaneous sources",
+            "Only wireless devices",
+            "Encrypted tunnels to hide attack traffic",
+          ],
+          ans: 1,
+          exp: "A DDoS attack uses multiple computers on disparate networks to launch a DoS attack from many simultaneous sources.",
+        },
+        {
+          cat: "Security Threats",
+          q: "Session hijacking aims to:",
+          opts: [
+            "Steal the session cookie to gain unauthorized access to network services",
+            "Physically access a server room",
+            "Intercept DNS queries",
+            "Crash a web server",
+          ],
+          ans: 0,
+          exp: "Session hijacking exploits a legitimate computer session — using methods like stealing session cookies, sequence prediction, and ARP poisoning — to gain unauthorized access.",
+        },
+        {
+          cat: "Security Threats",
+          q: "URL hijacking / typo squatting involves:",
+          opts: [
+            "Registering domain names that closely resemble legitimate websites to capture mistyped URLs",
+            "Redirecting DNS requests",
+            "Injecting malicious code into browsers",
+            "Stealing SSL certificates",
+          ],
+          ans: 0,
+          exp: "URL hijacking/typo squatting registers domain names closely resembling legitimate sites to take advantage of URL mistyping.",
+        },
+        {
+          cat: "Security Threats",
+          q: "An amplification attack dramatically increases:",
+          opts: [
+            "The attacker's network bandwidth",
+            "The bandwidth sent to a victim during a DDoS attack",
+            "The number of open ports on a target",
+            "The encryption strength needed",
+          ],
+          ans: 1,
+          exp: "An amplification attack dramatically increases the bandwidth sent to a victim during a DDoS attack by exploiting protocols with small requests that invoke large responses.",
+        },
+        {
+          cat: "Security Threats",
+          q: "Bluejacking is a wireless attack that:",
+          opts: [
+            "Steals private data from Bluetooth devices",
+            "Sends unwanted Bluetooth signals to other Bluetooth-enabled devices",
+            "Jams Wi-Fi signals",
+            "Cracks WPA2 encryption",
+          ],
+          ans: 0,
+          exp: "Bluejacking sends unwanted Bluetooth signals from a smartphone or device to other Bluetooth-enabled devices; it's separate from bluesnarfing which steals data.",
+        },
+        {
+          cat: "Security Threats",
+          q: "Bluesnarfing involves:",
+          opts: [
+            "Sending unsolicited Bluetooth messages",
+            "Gaining access to unauthorized information on a device by using a Bluetooth connection",
+            "Jamming Bluetooth signals",
+            "Cloning Bluetooth device identifiers",
+          ],
+          ans: 1,
+          exp: "Bluesnarfing is a wireless attack where an attacker gains access to unauthorized information on a wireless device by using a Bluetooth connection.",
+        },
+        {
+          cat: "Security Threats",
+          q: "War driving refers to:",
+          opts: [
+            "Physically breaking into server rooms",
+            "Searching for wireless LAN networks while in motion using wireless devices",
+            "Scanning ports from a remote location",
+            "Cloning MAC addresses while traveling",
+          ],
+          ans: 1,
+          exp: "War driving is a wireless threat where an attacker searches for wireless LAN networks while in motion using mobile devices.",
+        },
+        {
+          cat: "Security Threats",
+          q: "An Evil Twin wireless attack deceives users by:",
+          opts: [
+            "Cracking WPA2 passwords",
+            "Setting up an unauthorized AP that appears to be a legitimate one",
+            "Flooding the network with packets",
+            "Redirecting DNS to malicious servers",
+          ],
+          ans: 1,
+          exp: "Evil twins are unauthorized wireless access points that deceive users into believing they are legitimate network access points.",
+        },
+        {
+          cat: "Security Threats",
+          q: "A Pass the Hash attack:",
+          opts: [
+            "Requires cracking the password before use",
+            "Steals hashed credentials and uses them as-is to authenticate",
+            "Relies on phishing to capture passwords",
+            "Injects SQL commands to extract hashes",
+          ],
+          ans: 1,
+          exp: "In a pass the hash attack, the attacker steals hashed user credentials and uses them as-is to authenticate — no password cracking required.",
+        },
+        {
+          cat: "Security Threats",
+          q: "A downgrade attack forces a computer to:",
+          opts: [
+            "Upgrade to a vulnerable protocol version",
+            "Abandon encrypted messages in favor of plaintext",
+            "Use weaker hardware",
+            "Accept self-signed certificates",
+          ],
+          ans: 1,
+          exp: "A downgrade attack exploits the need for backward compatibility to force a computer to abandon encrypted messages in favor of plaintext.",
+        },
+        {
+          cat: "Security Threats",
+          q: "A zero-day exploit is characterized by:",
+          opts: [
+            "An attack that has been known and patched for years",
+            "An attack that occurs immediately after a vulnerability is identified, when protection is at its lowest",
+            "A slow-moving worm that takes days to spread",
+            "An attack targeting only legacy systems",
+          ],
+          ans: 1,
+          exp: "A zero-day exploit occurs immediately after a vulnerability is identified, when protection levels are at their lowest.",
+        },
+        {
+          cat: "Security Threats",
+          q: "Open-Source Intelligence (OSINT) is information that is:",
+          opts: [
+            "Stolen from corporate databases",
+            "Legally collected from publicly available origins",
+            "Obtained through network interception",
+            "Gathered only from the deep web",
+          ],
+          ans: 1,
+          exp: "OSINT is information that is legally collected from publicly available origins, including traditional media, social networking, and public information.",
+        },
+        {
+          cat: "Security Threats",
+          q: "A script kiddie is characterized by:",
+          opts: [
+            "High technical sophistication and ample funding",
+            "Limited technical knowledge relying on automated tools",
+            "Working for a nation state",
+            "Being an insider with physical access",
+          ],
+          ans: 1,
+          exp: "A script kiddie is an inexperienced hacker with limited technical knowledge who relies on automated attack tools.",
+        },
+        {
+          cat: "Security Threats",
+          q: "Driver manipulation through 'shimming' means:",
+          opts: [
+            "Deleting device drivers",
+            "Developing additional code between an application and OS to enable otherwise unavailable functionality",
+            "Replacing a driver with malware",
+            "Overclocking hardware drivers",
+          ],
+          ans: 1,
+          exp: "Shimming is the process of developing and implementing additional code between an application and the operating system to enable functionality that would otherwise be unavailable.",
+        },
+        {
+          cat: "Security Threats",
+          q: "A keylogger can be described as:",
+          opts: [
+            "Software that encrypts keystrokes",
+            "A hardware device or software application that records every keystroke made by a user",
+            "A network packet capture tool",
+            "A type of firewall rule",
+          ],
+          ans: 1,
+          exp: "A keylogger is a hardware device or software application that recognizes and records every keystroke made by a user.",
+        },
+        {
+          cat: "Security Threats",
+          q: "WPS (Wi-Fi Protected Setup) attacks are possible primarily because:",
+          opts: [
+            "WPS uses outdated encryption",
+            "The way WPS checks its PIN allows it to be cracked in hours, and WPS is enabled by default",
+            "WPS only supports WEP encryption",
+            "WPS does not use any authentication",
+          ],
+          ans: 1,
+          exp: "WPS attacks leverage the insecure nature of the WPS PIN validation process, which allows the PIN to be cracked in hours. WPS is enabled by default on many devices.",
+        },
+        {
+          cat: "Security Threats",
+          q: "The three-way TCP handshake occurs in which order?",
+          opts: [
+            "SYN-ACK → SYN → ACK",
+            "SYN → SYN-ACK → ACK",
+            "ACK → SYN → SYN-ACK",
+            "SYN → ACK → SYN-ACK",
+          ],
+          ans: 1,
+          exp: "The TCP three-way handshake: the client sends SYN, the server responds with SYN-ACK, and the client completes with ACK.",
+        },
+
+        // ─────────── Risk Analysis (20 questions) ───────────
+        {
+          cat: "Risk Analysis",
+          q: "Risk management is defined as the process of identifying risks, analyzing them, developing a response strategy, and:",
+          opts: [
+            "Eliminating all threats",
+            "Mitigating their future impact",
+            "Reporting them to law enforcement",
+            "Encrypting all assets",
+          ],
+          ans: 1,
+          exp: "Risk management is the process of identifying risks, analyzing them, developing a response strategy for them, and mitigating their future impact.",
+        },
+        {
+          cat: "Risk Analysis",
+          q: "In qualitative risk analysis, risk is measured using:",
+          opts: [
+            "Numeric values based on historical data",
+            "Descriptions and words such as High, Medium, and Low",
+            "Mathematical formulas only",
+            "Penetration test results",
+          ],
+          ans: 1,
+          exp: "Qualitative risk analysis uses descriptions and words to measure risk, such as High, Medium, and Low, and is usually scenario-based.",
+        },
+        {
+          cat: "Risk Analysis",
+          q: "What does SLE stand for in risk calculation?",
+          opts: [
+            "Security Loss Estimate",
+            "Single Loss Expectancy — the financial loss expected from a single adverse event",
+            "System Lifecycle Evaluation",
+            "Scheduled Loss Event",
+          ],
+          ans: 1,
+          exp: "SLE (Single Loss Expectancy) is the financial loss expected from a single adverse event.",
+        },
+        {
+          cat: "Risk Analysis",
+          q: "The formula ALE = SLE × ARO means:",
+          opts: [
+            "Asset Loss Estimate equals Single Loss Event times Annual Risk Occurrence",
+            "Annual Loss Expectancy equals Single Loss Expectancy times Annualized Rate of Occurrence",
+            "Average Loss Estimate equals Security Level times Annual Risk Output",
+            "None of the above",
+          ],
+          ans: 1,
+          exp: "ALE (Annual Loss Expectancy) = SLE (Single Loss Expectancy) × ARO (Annualized Rate of Occurrence), representing the total annual cost of a risk.",
+        },
+        {
+          cat: "Risk Analysis",
+          q: "Which risk response technique involves acknowledging the risk and its consequences without complete avoidance?",
+          opts: ["Transfer", "Avoid", "Accept", "Mitigate"],
+          ans: 2,
+          exp: "Acceptance acknowledges the risk and its consequences — it recognizes that the risk may not be entirely avoidable or that mitigation costs are prohibitive.",
+        },
+        {
+          cat: "Risk Analysis",
+          q: "Transferring risk involves:",
+          opts: [
+            "Eliminating the cause of the risk",
+            "Allocating responsibility of risk to another agency or third party such as an insurance company",
+            "Patching vulnerable systems",
+            "Implementing an IDS",
+          ],
+          ans: 1,
+          exp: "Risk transfer allocates the responsibility of risk to another agency or third party, such as an insurance company.",
+        },
+        {
+          cat: "Risk Analysis",
+          q: "Technical controls in risk mitigation include:",
+          opts: [
+            "Procedures for monitoring policy adherence",
+            "Hardware or software installations to monitor and prevent threats",
+            "Day-to-day operational procedures",
+            "Security measures to prevent physical asset damage",
+          ],
+          ans: 1,
+          exp: "Technical controls are hardware or software installations implemented to monitor and prevent threats and attacks to computer systems and services.",
+        },
+        {
+          cat: "Risk Analysis",
+          q: "A Business Impact Analysis (BIA) is primarily used to:",
+          opts: [
+            "Determine employee satisfaction",
+            "Identify organizational risks and their impact on ongoing, business-critical operations",
+            "Set software licensing policies",
+            "Manage network configurations",
+          ],
+          ans: 1,
+          exp: "BIA is a systematic activity that identifies organizational risks and determines their impact on ongoing, business-critical operations and processes.",
+        },
+        {
+          cat: "Risk Analysis",
+          q: "MTD (Maximum Tolerable Downtime) represents:",
+          opts: [
+            "The time needed to restore backups",
+            "The longest time a business outage can occur without causing irrecoverable business failure",
+            "The average time between hardware failures",
+            "The time needed to deploy patches",
+          ],
+          ans: 1,
+          exp: "MTD is the longest time period that a business outage can occur without causing irrecoverable business failure.",
+        },
+        {
+          cat: "Risk Analysis",
+          q: "RPO (Recovery Point Objective) determines:",
+          opts: [
+            "How long it takes to restore systems",
+            "The longest period an organization can tolerate lost data being unrecoverable — helping determine backup frequency",
+            "The time between hardware failures",
+            "The cost of recovery operations",
+          ],
+          ans: 1,
+          exp: "RPO is the longest period of time an organization can tolerate lost data being unrecoverable; it helps determine how often backups must be taken.",
+        },
+        {
+          cat: "Risk Analysis",
+          q: "RTO (Recovery Time Objective) is:",
+          opts: [
+            "The maximum data loss tolerated",
+            "The length of time it takes after an event to resume normal business operations",
+            "The time between two consecutive failures",
+            "The cost of a single recovery effort",
+          ],
+          ans: 1,
+          exp: "RTO is the length of time it takes after an event to resume normal business operations; it must be achieved before MTD.",
+        },
+        {
+          cat: "Risk Analysis",
+          q: "MTTF (Mean Time to Failure) is:",
+          opts: [
+            "The average time to repair a failed device",
+            "The average time a device is expected to be in operation before failing",
+            "The time between two successive failures",
+            "The maximum tolerable recovery time",
+          ],
+          ans: 1,
+          exp: "MTTF (Mean Time to Failure) is the average time a device or component is expected to be in operation — a measure of reliability for non-repairable devices.",
+        },
+        {
+          cat: "Risk Analysis",
+          q: "The formula MTBF = MTTF + MTTR means:",
+          opts: [
+            "Mean Time Between Failures equals Mean Time to Fix times Repair Rate",
+            "Mean Time Between Failures equals Mean Time to Failure plus Mean Time to Repair",
+            "Maximum Tolerable Backup Frequency equals system failure rate",
+            "None of the above",
+          ],
+          ans: 1,
+          exp: "MTBF (Mean Time Between Failures) = MTTF (Mean Time to Failure) + MTTR (Mean Time to Repair). It predicts the expected time between failures.",
+        },
+        {
+          cat: "Risk Analysis",
+          q: "Personally Identifiable Information (PII) is:",
+          opts: [
+            "Only social security numbers",
+            "Information a company uses to identify or contact employees and other individuals",
+            "Public domain information",
+            "Encrypted data at rest",
+          ],
+          ans: 1,
+          exp: "PII is information that a company uses to identify or contact employees and other individuals.",
+        },
+        {
+          cat: "Risk Analysis",
+          q: "A Privacy Impact Assessment (PIA) is:",
+          opts: [
+            "A network penetration test",
+            "A tool for identifying and analyzing risks to privacy during the life cycle of a program or system",
+            "A background check on employees",
+            "An audit of software licenses",
+          ],
+          ans: 1,
+          exp: "A PIA is a tool for identifying and analyzing risks to privacy during the life cycle of a program or system.",
+        },
+        {
+          cat: "Risk Analysis",
+          q: "Change management in the context of security aims to:",
+          opts: [
+            "Reduce employee resistance to change",
+            "Assure maximum security, stability, and availability of IT services when making changes",
+            "Automate software deployments",
+            "Eliminate the need for security testing",
+          ],
+          ans: 1,
+          exp: "Change management is a systematic way of approving and executing change to assure maximum security, stability, and availability of information technology services.",
+        },
+        {
+          cat: "Risk Analysis",
+          q: "Which risk analysis method uses both descriptions AND numeric values?",
+          opts: [
+            "Qualitative",
+            "Quantitative",
+            "Semi-quantitative",
+            "Empirical",
+          ],
+          ans: 2,
+          exp: "Semi-quantitative analysis uses both descriptions and numeric values, attempting to find middle ground between qualitative and quantitative approaches.",
+        },
+        {
+          cat: "Risk Analysis",
+          q: "Man-made threats can be intentional or unintentional and are the result of:",
+          opts: [
+            "Weather events and natural disasters",
+            "Individual or collective human activity",
+            "System vulnerabilities in software",
+            "Physical deterioration of hardware",
+          ],
+          ans: 1,
+          exp: "Man-made threats are residual occurrences of individual or collective human activity and can be intentional or unintentional.",
+        },
+        {
+          cat: "Risk Analysis",
+          q: "Operational controls are security measures that:",
+          opts: [
+            "Use hardware and software to monitor threats",
+            "Ensure adherence to organizational security policies",
+            "Safeguard all aspects of day-to-day operations, functions, and activities",
+            "Prevent key assets from being physically damaged",
+          ],
+          ans: 2,
+          exp: "Operational controls are security measures implemented to safeguard all aspects of day-to-day operations, functions, and activities.",
+        },
+        {
+          cat: "Risk Analysis",
+          q: "The six phases of risk analysis, in order, begin with Asset ID and end with:",
+          opts: [
+            "Impact Analysis",
+            "Probability Quantification",
+            "Countermeasure Determination",
+            "Vulnerability ID",
+          ],
+          ans: 2,
+          exp: "The six phases are: Asset ID → Vulnerability ID → Threat Assessment → Probability Quantification → Impact Analysis → Countermeasure Determination.",
+        },
+      ];
+
+      // ===================== QUIZ STATE =====================
+      let questions = [];
+      let currentIdx = 0;
+      let answers = []; // null = unanswered, index = chosen option
+      let score = 0;
+
+      function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+
+      function startQuiz() {
+        // Shuffle questions and take all 100
+        questions = shuffle(ALL_QUESTIONS);
+        answers = new Array(questions.length).fill(null);
+        score = 0;
+        currentIdx = 0;
+
+        document.getElementById("startScreen").style.display = "none";
+        document.getElementById("resultsScreen").style.display = "none";
+        document.getElementById("quizScreen").style.display = "block";
+        document.getElementById("headerProgress").style.display = "block";
+        document.getElementById("scoreBadge").style.display = "block";
+
+        renderQuestion();
+      }
+
+      function renderQuestion() {
+        const q = questions[currentIdx];
+        const total = questions.length;
+
+        // Update header
+        document.getElementById("progressText").textContent =
+          `Question ${currentIdx + 1} of ${total}`;
+        const pct = Math.round((currentIdx / total) * 100);
+        document.getElementById("progressPct").textContent = pct + "%";
+        document.getElementById("progressFill").style.width = pct + "%";
+        document.getElementById("liveScore").textContent = score;
+        document.getElementById("liveAnswered").textContent = answers.filter(
+          (a) => a !== null,
+        ).length;
+
+        // Question card
+        document.getElementById("qNumber").textContent =
+          `Q${currentIdx + 1} / ${total}`;
+        document.getElementById("qCategory").textContent = q.cat;
+        document.getElementById("questionText").textContent = q.q;
+
+        // Options
+        const grid = document.getElementById("optionsGrid");
+        grid.innerHTML = "";
+        const letters = ["A", "B", "C", "D"];
+        const answered = answers[currentIdx];
+
+        q.opts.forEach((opt, i) => {
+          const btn = document.createElement("button");
+          btn.className = "option-btn";
+          btn.innerHTML = `<span class="option-letter">${letters[i]}</span><span>${opt}</span>`;
+          btn.onclick = () => selectAnswer(i);
+
+          if (answered !== null) {
+            btn.disabled = true;
+            if (i === q.ans) btn.classList.add("correct");
+            else if (i === answered && answered !== q.ans)
+              btn.classList.add("selected-wrong");
+          }
+          grid.appendChild(btn);
+        });
+
+        // Feedback
+        const fb = document.getElementById("feedbackBox");
+        const fblabel = document.getElementById("feedbackLabel");
+        const fbtext = document.getElementById("feedbackText");
+        if (answered !== null) {
+          fb.className =
+            "feedback-box show " +
+            (answered === q.ans ? "correct-fb" : "wrong-fb");
+          fblabel.className =
+            "feedback-label " +
+            (answered === q.ans ? "correct-fb" : "wrong-fb");
+          fblabel.textContent =
+            answered === q.ans ? "✓ Correct!" : "✗ Incorrect";
+          fbtext.textContent = q.exp;
+        } else {
+          fb.className = "feedback-box";
+        }
+
+        // Navigation buttons
+        const backBtn = document.getElementById("backBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        const finishBtn = document.getElementById("finishBtn");
+
+        backBtn.disabled = currentIdx === 0;
+
+        const isLast = currentIdx === total - 1;
+        if (answered !== null) {
+          if (isLast) {
+            nextBtn.style.display = "none";
+            finishBtn.style.display = "inline-block";
+          } else {
+            nextBtn.style.display = "inline-block";
+            finishBtn.style.display = "none";
+          }
+        } else {
+          nextBtn.style.display = "none";
+          finishBtn.style.display = "none";
+        }
+
+        // Animate
+        const card = document.getElementById("questionCard");
+        card.classList.remove("animate-in");
+        void card.offsetWidth;
+        card.classList.add("animate-in");
+      }
+
+      function selectAnswer(optIdx) {
+        if (answers[currentIdx] !== null) return;
+        answers[currentIdx] = optIdx;
+        const q = questions[currentIdx];
+        if (optIdx === q.ans) score++;
+        renderQuestion();
+      }
+
+      function goBack() {
+        if (currentIdx > 0) {
+          currentIdx--;
+          renderQuestion();
+        }
+      }
+
+      function goNext() {
+        if (currentIdx < questions.length - 1) {
+          currentIdx++;
+          renderQuestion();
+        }
+      }
+
+      function finishQuiz() {
+        document.getElementById("quizScreen").style.display = "none";
+        document.getElementById("resultsScreen").style.display = "block";
+        document.getElementById("headerProgress").style.display = "none";
+        document.getElementById("scoreBadge").style.display = "none";
+
+        const total = questions.length;
+        const correct = score;
+        const wrong = answers.filter(
+          (a, i) => a !== null && a !== questions[i].ans,
+        ).length;
+        const skipped = answers.filter((a) => a === null).length;
+        const pct = Math.round((correct / total) * 100);
+
+        document.getElementById("finalScore").textContent = correct;
+        document.getElementById("correctCount").textContent = correct;
+        document.getElementById("wrongCount").textContent = wrong;
+        document.getElementById("skippedCount").textContent = skipped;
+        document.getElementById("pctScore").textContent = pct + "%";
+
+        let emoji, grade, msg;
+        if (pct >= 90) {
+          emoji = "🏆";
+          grade = "Outstanding!";
+          msg = "Exceptional mastery of cybersecurity concepts!";
+        } else if (pct >= 80) {
+          emoji = "🥇";
+          grade = "Excellent!";
+          msg = "Strong understanding across all topics.";
+        } else if (pct >= 70) {
+          emoji = "🥈";
+          grade = "Good Job!";
+          msg = "Solid knowledge with a few areas to review.";
+        } else if (pct >= 60) {
+          emoji = "🥉";
+          grade = "Passing";
+          msg = "Review the missed topics to strengthen your understanding.";
+        } else {
+          emoji = "📚";
+          grade = "Keep Studying";
+          msg = "Revisit the course material and try again!";
+        }
+
+        document.getElementById("resultEmoji").textContent = emoji;
+        document.getElementById("resultGrade").textContent = grade;
+        document.getElementById("resultMessage").textContent = msg;
+
+        const scoreEl = document.getElementById("finalScore");
+        if (pct >= 70) scoreEl.style.color = "var(--correct)";
+        else if (pct >= 50) scoreEl.style.color = "var(--warning)";
+        else scoreEl.style.color = "var(--wrong)";
+
+        renderReview("all");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function renderReview(filter) {
+        const list = document.getElementById("reviewList");
+        list.innerHTML = "";
+        questions.forEach((q, i) => {
+          const userAns = answers[i];
+          const isCorrect = userAns === q.ans;
+          const isSkipped = userAns === null;
+
+          if (filter === "correct" && !isCorrect) return;
+          if (filter === "wrong" && (isCorrect || isSkipped)) return;
+
+          const item = document.createElement("div");
+          item.className = `review-item ${isCorrect ? "correct-item" : isSkipped ? "" : "wrong-item"}`;
+
+          const letters = ["A", "B", "C", "D"];
+          let answerHtml = "";
+          if (isSkipped) {
+            answerHtml = `<div><span class="label">Your answer: </span><span class="skipped-badge">Skipped</span></div>
+                   <div><span class="label">Correct: </span><span class="correct-ans">${letters[q.ans]}. ${q.opts[q.ans]}</span></div>`;
+          } else if (isCorrect) {
+            answerHtml = `<div><span class="label">Your answer: </span><span class="correct-ans">${letters[userAns]}. ${q.opts[userAns]}</span></div>`;
+          } else {
+            answerHtml = `<div><span class="label">Your answer: </span><span class="wrong-ans">${letters[userAns]}. ${q.opts[userAns]}</span></div>
+                   <div><span class="label">Correct: </span><span class="correct-ans">${letters[q.ans]}. ${q.opts[q.ans]}</span></div>`;
+          }
+
+          item.innerHTML = `
+      <div class="review-meta">
+        <span class="review-qnum mono">Q${i + 1} · ${q.cat}</span>
+        <span class="review-status ${isSkipped ? "" : isCorrect ? "correct" : "wrong"}">${isSkipped ? "— Skipped" : isCorrect ? "✓ Correct" : "✗ Wrong"}</span>
+      </div>
+      <div class="review-question">${q.q}</div>
+      <div class="review-answers">${answerHtml}</div>
+    `;
+          list.appendChild(item);
+        });
+
+        if (list.innerHTML === "") {
+          list.innerHTML =
+            '<div style="text-align:center;color:var(--muted);padding:2rem;">No questions in this category.</div>';
+        }
+      }
+
+      function filterReview(type, btn) {
+        document
+          .querySelectorAll(".filter-btn")
+          .forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderReview(type);
+      }
+
+      function confirmRestart() {
+        if (confirm("Restart the quiz? All progress will be lost.")) {
+          restartQuiz();
+        }
+      }
+
+      function restartQuiz() {
+        document.getElementById("resultsScreen").style.display = "none";
+        document.getElementById("quizScreen").style.display = "none";
+        document.getElementById("startScreen").style.display = "block";
+        document.getElementById("headerProgress").style.display = "none";
+        document.getElementById("scoreBadge").style.display = "none";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    </script>
+  </body>
+</html>
